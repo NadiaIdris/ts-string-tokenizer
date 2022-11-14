@@ -10,9 +10,11 @@
 
 ## Exercise 1: String tokenizer aka mimic cd command in terminal
 
+![](/docs/readme_images/string-tokenizer.png)
+
 We want to create a function that mimics the cd command in the terminal.
 
-### Function signature
+## Function signature
 
 ```TypeScript
 function cd(currentPath: string, action: string): string
@@ -29,14 +31,15 @@ The function takes two argument, first argument is a current path and the second
 | /folder/nestedFolder | ../folder2/folder3 | /folder/folder2/folder3              |
 | /folder/nestedFolder | folder2/./folder3  | /folder/nestedFolder/folder2/folder3 |
 
-## String Tokenizer Logic
+# String Tokenizer Logic
 
 Our `currentPath` is a string and we need to manipulate this string and eventually return a new string.
 
-### Data modelling
+## Data modelling
 
 1. In order for us to manipulate a string easily, we chunk the string into smaller strings and store
    those smaller string chunks into an array.
+
 - For example, "/home/user/folder" would be turned into an array of ["home", "user", "folder"] <- Data modelling.
 - We don't want to store delimiters into our array, this would only complicate manipulating the array.
 - We will add the delimiters back to our string later when we are returning output string.
@@ -58,9 +61,12 @@ Our `currentPath` is a string and we need to manipulate this string and eventual
 - IDEA: We check if the first string character is "/", then don't chunk the string into an array and
   just return the string as output string, since it's an absolute path.
 
+## Assign meaning to each action
+
+![](/docs/readme_images/string-tokenizer-assign-meaning.png) 
 3. Now we have `action` string array. In order to apply the `action` to our `currentPath`, we need to go through
-   each array element, check what it means and then manipulate our currentPath accordingly. We need to define
-   all of our `action` cases:
+each array element, check what it means and then manipulate our currentPath accordingly. We need to define
+all of our `action` cases:
 
 - If the first character is "/", then we don't chunk the string into an array and just return the string
   as output string, since it's an absolute path.
@@ -88,7 +94,7 @@ Our `currentPath` is a string and we need to manipulate this string and eventual
 
 6. Done!
 
-## In Memory Rate Limiter
+# Exercise 2: In Memory Rate Limiter
 
 - **Exercise 2:** Implement a in-memory rate limiter that limits the number of tokens that can be
   produced in a given time period.

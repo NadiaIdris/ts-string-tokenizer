@@ -1,14 +1,16 @@
-# String tokenizer and in memory rate limiter
+# String tokenizer and in memory rate limiter exercises
+
+## Install project dependencies
+
+- In the project root folder run: `npm install` (or `npm i`).
 
 ## Run tests
 
-- Run all tests:
+- In the project root folder run: `npx jest --watchAll`
 
-  ```
-  npx jest --watchAll
-  ```
+---
 
-## Exercise 1: String tokenizer aka mimic cd command in terminal
+# Exercise 1: String tokenizer aka mimic cd command in terminal
 
 ![](/docs/readme_images/string-tokenizer.png)
 
@@ -20,7 +22,9 @@ We want to create a function that mimics the cd command in the terminal.
 function cd(currentPath: string, action: string): string
 ```
 
-The function takes two argument, first argument is a current path and the second argument is an action to apply to the current path to change the path. The function modifies the path and returns the resulting path as a string. For example:
+The function takes two argument, first argument is a current path and the second argument is an action to apply to the current path to change the path. The function modifies the path and returns the resulting path as a string. 
+
+## Test against the following cases
 
 | Current path         | Action             | Resulting path                       |
 | -------------------- | ------------------ | ------------------------------------ |
@@ -31,7 +35,7 @@ The function takes two argument, first argument is a current path and the second
 | /folder/nestedFolder | ../folder2/folder3 | /folder/folder2/folder3              |
 | /folder/nestedFolder | folder2/./folder3  | /folder/nestedFolder/folder2/folder3 |
 
-# String Tokenizer Logic
+# String tokenizer logic
 
 Our `currentPath` is a string and we need to manipulate this string and eventually return a new string.
 
@@ -63,8 +67,7 @@ Our `currentPath` is a string and we need to manipulate this string and eventual
 
 ## Assign meaning to each action
 
-![](/docs/readme_images/string-tokenizer-assign-meaning.png) 
-3. Now we have `action` string array. In order to apply the `action` to our `currentPath`, we need to go through
+![](/docs/readme_images/string-tokenizer-assign-meaning.png) 3. Now we have `action` string array. In order to apply the `action` to our `currentPath`, we need to go through
 each array element, check what it means and then manipulate our currentPath accordingly. We need to define
 all of our `action` cases:
 

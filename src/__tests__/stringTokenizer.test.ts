@@ -1,25 +1,31 @@
 import { cd } from "../stringTokenizer";
 
-test("action 'a' works on currentPath '/'", () => {
-  expect(cd("/", "a")).toEqual("/a");
+test("Move to absolute path works", () => {
+  expect(cd("/", "folder")).toEqual("/folder");
 });
 
-test("action 'c' works on currentPath '/b'", () => {
-  expect(cd("/b", "c")).toEqual("/b/c");
+test("Move to nested folder works", () => {
+  expect(cd("/folder", "nestedFolder")).toEqual("/folder/nestedFolder");
 });
 
-test("action '/e' works on currentPath '/d'", () => {
-  expect(cd("/d", "/e")).toEqual("/e");
+test("Move one folder up works", () => {
+  expect(cd("/folder/nestedFolder", "..")).toEqual("/folder");
 });
 
-test("action '..' works on currentPath '/foo/bar'", () => {
-  expect(cd("/foo/bar", "..")).toEqual("/foo");
+test("Move one folder up and then two folders down works", () => {
+  expect(cd("/folder/nestedFolder", "../folder2/folder3")).toEqual(
+    "/folder/folder2/folder3"
+  );
 });
 
-test("action '../p/q' works on currentPath '/x/y'", () => {
-  expect(cd("/x/y", "../p/q")).toEqual("/x/p/q");
+test("Period in the middle of the path gets ignored", () => {
+  expect(cd("/folder/nestedFolder", "folder2/./folder3")).toEqual(
+    "/folder/nestedFolder/folder2/folder3"
+  );
 });
 
-test("action 'p/./q' works on currentPath '/x/y'", () => {
-  expect(cd("/x/y", "p/./q")).toEqual("/x/y/p/q");
+test("Period at the start of the path gets ignored", () => {
+  expect(cd("/folder/nestedFolder", "./folder2/folder3")).toEqual(
+    "/folder/nestedFolder/folder2/folder3"
+  );
 });

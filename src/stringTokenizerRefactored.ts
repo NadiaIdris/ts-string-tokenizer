@@ -1,16 +1,19 @@
-export function cd(currentPath: string, cdAction: string): string {
-  if (cdAction.startsWith("/")) return cdAction;
+/* Read about the logic of cd function in README.md. */
+export function cd(currentPath: string, action: string): string {
+  if (action.startsWith("/")) return action;
 
   const currentPathArray = parseCurrentPathToArray(currentPath);
-  const cdActionArray = cdAction.split("/");
-  modifyCdActionArray(cdActionArray, currentPathArray);
+  const actionArray = action.split("/");
+  modifyCurrentPathArray(currentPathArray, actionArray);
 
-  const output: string = `/` + currentPathArray.join("/"); 
-  return output;
+  return `/${currentPathArray.join("/")}`;
 }
 
-function modifyCdActionArray(cdActionArray: string[], currentPathArray: string[]) {
-  cdActionArray.forEach((action) => {
+function modifyCurrentPathArray(
+  currentPathArray: string[],
+  actionArray: string[]
+) {
+  actionArray.forEach((action) => {
     if (action === "..") {
       currentPathArray.pop(); // remove the last element from the array. Outcome is ["home", "user"]
     } else if (action !== ".") {

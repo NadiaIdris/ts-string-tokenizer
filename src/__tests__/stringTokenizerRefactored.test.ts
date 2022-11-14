@@ -1,4 +1,4 @@
-import { cd } from "../stringTokenizer2";
+import { cd } from "../stringTokenizerRefactored";
 
 test("Move to absolute path works", () => {
   expect(cd("/", "folder")).toEqual("/folder");

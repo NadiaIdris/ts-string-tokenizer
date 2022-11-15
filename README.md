@@ -22,7 +22,7 @@ We want to create a function that mimics the cd command in the terminal.
 function cd(currentPath: string, action: string): string
 ```
 
-The function takes two argument, first argument is a current path and the second argument is an action to apply to the current path to change the path. The function modifies the path and returns the resulting path as a string. 
+The function takes two argument, first argument is a current path and the second argument is an action to apply to the current path to change the path. The function modifies the path and returns the resulting path as a string.
 
 ## Test against the following cases
 
@@ -99,28 +99,63 @@ all of our `action` cases:
 
 # Exercise 2: In Memory Rate Limiter
 
+![](/docs/readme_images/api-rate-limiter.png)
+![](/docs/readme_images/api-rate-limiter2.png)
+
 - **Exercise 2:** Implement a in-memory rate limiter that limits the number of tokens that can be
   produced in a given time period.
-  ![](/docs/readme_images/in-memory-rate-limiter.png)
+
+## Function signature
+
+```TypeScript
+function acceptOrDenyRequest(
+  maxRequests: number,
+  timeWindowInMs: number,
+  successfulRequests: number[],
+  newRequestTimestamp: number
+): "accept" | "deny"
+```
+
+## Test against the following cases
+
+| Request # | Timestamp | Result |
+| --------- | --------- | ------ |
+| 1         | 1100      | accept |
+| 2         | 1200      | accept |
+| 3         | 1300      | deny   |
+| 4         | 2100      | accept |
+| 5         | 2150      | deny   |
+| 6         | 2200      | accept |
+
+Request1: 1000ms
 
 ## In Memory Rate Limiter Logic
 
-1. We have a web service (API) running on a remote server listening for requests.
-2. When a request comes in, we want to record the request time (and the request IP address?) and save it in an array data structure.
+We have built and API and made it's endpoint public. This means that in theory we could have millions of requests coming in to our API endpoint. This could be costly or we could have a malicious code that could potentially crash our server. We need to protect our API endpoint from malicious code and also from too many requests coming in at the same time. We need to implement a rate limiter that limits the number of tokens (requests) that can be produced in a given time period.
 
-   ```TypeScript
-   type RequestRecord = {
-     requestTimeStamp: number; // timestamp is in milliseconds (e.g. 1660426545749)
-     ipAddress: string;
-   };
-   type RequestRecords = RequestRecord[];
-   ```
+1. We are going to create two functions: outer and inner function. Outer function defines all the variables and data structures we need to keep track of and the inner function accepts all those variables as arguments and checks is there space left in the time window to allow another request in or not.
 
-   ```TypeScript
-   const requests: RequestRecords = [
-     {requestTimeStamp: number, ipAddress: string},
-     ... (more requests)
-   ]
-   ```
+Things we need to keep track of in our outer function:
 
-3. API rate limiter tales
+- We need to keep track of all the successful request timestamps. Create an empty array `successfulRequests` to start tracking the successful request timestamps.
+- We need to define how many requests we want to allow in a given time period. This is the `maxRequests`.
+- Then we need to define the time period that we count how many requests come in and which requests to allow and which to deny. This is the `timeWindowInMs`.
+- One more thing. When a new request comes in, we need to create a timestamp for it. This is the `newRequestTimestamp`. This is the time window endpoint. We use this timestamp to calculate the window start point to check if there are less than max requests currently in the time window.
+
+2. Now we are going to call a function `acceptOrDenyRequest` which will accept or deny the request to hit the API endpoint. This function will take in the arguments we just defined:
+
+   - `maxRequests`
+   - `timeWindowInMs`
+   - `successfulRequests`
+   - `newRequestTimestamp`.
+
+   - We need to keep track of request count in the time window. We create a `requestCount` variable. When the request count is equal to the max requests, we need to deny the request since the time window is full.
+
+   - We will loop through the `successfulRequests` array from back to front. We will check if the previously successful timestamp is still within the time window. If it is, we will increment the request count. If it is not, we will stop the loop since we know we have reached outside of the window bounds.
+
+     ![](/docs/readme_images/api-rate-limiter3.svg)
+
+   - Now that we know how many requests were successful in the current time window, we can compare successful requests number with the max requests allowed in the time window. If successful requests number is less than max request allowed, then we can accept the request. If successful requests number is equal to max requests allowed, then we need to deny the request since the time window is full with successful requests already.
+     ![](/docs/readme_images/api-rate-limiter4.svg)
+
+3. In the outer function we check if the request was successful or not. It the request was successful, we push the request timestamp to `successfulRequests` array and return "accept". If the request was not successful, we return "deny".

@@ -144,10 +144,10 @@ Things we need to keep track of in our outer function:
 
 2. Now we are going to call a function `acceptOrDenyRequest` which will accept or deny the request to hit the API endpoint. This function will take in the arguments we just defined:
 
-   - `maxRequests`
-   - `timeWindowInMs`
-   - `successfulRequests`
-   - `newRequestTimestamp`.
+   - `maxRequests: number`
+   - `timeWindowInMs: number`
+   - `successfulRequests: number[]`
+   - `newRequestTimestamp: number`.
 
    - We need to keep track of request count in the time window. We create a `requestCount` variable. When the request count is equal to the max requests, we need to deny the request since the time window is full.
 
